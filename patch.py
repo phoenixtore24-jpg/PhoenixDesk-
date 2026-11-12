@@ -8,7 +8,7 @@ NOM = "PhoenixDesk"            # nom interne (sans espace)
 NOM_AFFICHE = "Phoenix Desk"
 DESCRIPTION = "Phoenix Desk - Assistance a distance Phoenixtore"
 
-racine = pathlib.Path(__file__).resolve().parent.parent
+racine = pathlib.Path(__file__).resolve().parent
 icones = racine
 erreurs = []
 
