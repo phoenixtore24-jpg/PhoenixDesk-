@@ -9,7 +9,7 @@ NOM_AFFICHE = "Phoenix Desk"
 DESCRIPTION = "Phoenix Desk - Assistance a distance Phoenixtore"
 
 racine = pathlib.Path(__file__).resolve().parent.parent
-icones = racine / "phoenixdesk" / "icons"
+icones = racine
 erreurs = []
 
 def remplacer(fichier, ancien, nouveau, obligatoire=True):
