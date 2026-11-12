@@ -58,6 +58,90 @@ for src, dests in copies.items():
         shutil.copyfile(s, racine / d)
         print(f"OK icône {d}")
 
+# 4. Bandeau de présentation dans la fenêtre : nom, entreprise et téléphone
+NOM_PRO = "Léo Oreiller"
+ENTREPRISE = "By Phoenixtore"
+TEL = "07 80 52 14 45"
+bandeau = f"""      Align(
+        alignment: Alignment.center,
+        child: loadLogo(),
+      ),
+      Container(
+        margin: const EdgeInsets.fromLTRB(16, 0, 16, 10),
+        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
+        decoration: BoxDecoration(
+          color: const Color(0xFF2A1B6B),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Column(
+          children: const [
+            Text(
+              '{NOM_PRO}',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                  color: Colors.white, fontWeight: FontWeight.bold, fontSize: 15),
+            ),
+            Text(
+              '{ENTREPRISE}',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                  color: Color(0xFF22D3EE),
+                  fontWeight: FontWeight.w600,
+                  fontSize: 13),
+            ),
+            SizedBox(height: 6),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.phone, color: Colors.white, size: 14),
+                SizedBox(width: 4),
+                Text(
+                  '{TEL}',
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 13),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),"""
+remplacer("flutter/lib/desktop/pages/desktop_home_page.dart",
+"""      Align(
+        alignment: Alignment.center,
+        child: loadLogo(),
+      ),""", bandeau)
+
+# 5. Fin de séance : ouvre la page Google pour laisser un avis (côté client)
+AVIS = "https://g.page/r/CUogfqw2amr3ECE/review"
+sm = "flutter/lib/models/server_model.dart"
+remplacer(sm, "import 'model.dart';\n",
+"""import 'model.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+bool _avisOuvert = false;
+""")
+remplacer(sm, """      if (desktopType == DesktopType.cm && _clients.isEmpty) {
+        hideCmWindow();
+      }
+      if (isAndroid) androidUpdatekeepScreenOn();
+      notifyListeners();
+    } catch (e) {
+      debugPrint("onClientRemove failed,error:$e");""",
+f"""      if (desktopType == DesktopType.cm && _clients.isEmpty) {{
+        if (!_avisOuvert) {{
+          _avisOuvert = true;
+          launchUrl(Uri.parse('{AVIS}'),
+              mode: LaunchMode.externalApplication);
+        }}
+        hideCmWindow();
+      }}
+      if (isAndroid) androidUpdatekeepScreenOn();
+      notifyListeners();
+    }} catch (e) {{
+      debugPrint("onClientRemove failed,error:$e");""")
+
 if erreurs:
     print("\n".join(erreurs))
     sys.exit(1)
